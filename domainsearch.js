@@ -6,6 +6,7 @@ const optionDefinitions = [
   { name: 'dictionary', alias: 'd', type: String, defaultOption: true },
   { name: 'domains', alias: 'D', type: String },
   { name: 'verify', alias: 'V', type: Boolean, defaultValue: false },
+  { name: 'sort', alias: 's', type: Boolean, defaultValue: false },
 ];
 
 let options = {};
@@ -62,14 +63,39 @@ const candidates = dictionary
   }, []);
 
 if (options.verify) {
-  candidates.map((candidate) => {
-    dns
-      .resolve4(candidate, (result) => {
+  const verified = [];
+  const promises = candidates.map((candidate) => {
+    return new Promise((resolve, reject) => {
+      dns.resolve4(candidate, (result) => {
         if (result && result.errno === dns.NOTFOUND) {
-          console.log(candidate);
+          if (options.sort) {
+            verified.push(candidate);
+          } else {
+            console.log(candidate);
+          }
         }
+        resolve();
       });
+    });
   });
+
+  Promise.all(promises)
+    .then(() => {
+      if (options.sort) {
+        printOutput(verified);
+      }
+    });
 } else {
-  console.log(candidates.join('\n'));
+  printOutput(candidates);
+}
+
+function printOutput (result) {
+  if (options.sort) {
+    console.log(result
+      .sort()
+      .join('\n'));
+  } else {
+    console.log(result
+      .join('\n'));
+  }
 }

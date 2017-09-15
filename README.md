@@ -8,8 +8,15 @@ search.
 Optionally, you can also have the tool check for dns availability, using the
 `--verify` parameter.
 
-## Usage
-`node domainsearch.js dictionaryfile [comma-separated list of top-level domains] [--verify]`
+## Basic usage
+`node domainsearch.js dictionaryfile`
+
+## Parameters
+
+- `--dictionary, -d` — Specify the dictionary file to use
+- `--domains, -D` — Specify a comma-separated list of top-level domains to search (for example 'ga, it, net')
+- `--verify` — Check if the domains are available for registration
+- `--sort` — Alphabetically sort the output
 
 ### Examples
 To search all existing top-level domains for Swedish words, without verification:
@@ -20,6 +27,3 @@ To search all existing top-level domains for Swedish words, with verification:
 
 To search only a few top-level domains for Swedish words, without verification:
 `node domainsearch.js dictionaries/swedish.dic --domains 'ga, se, zippo'`
-
-### Where can I get more dictionary files?
-They're everywhere, just google for them. I found mine at https://github.com/titoBouzout/Dictionaries
