@@ -53,8 +53,9 @@ const dictionary = String(fs.readFileSync(options.dictionary))
 const candidates = dictionary
   .reduce((list, word) => {
     options.domains.forEach((domain) => {
-      if (word.substr(-2) === domain) {
-        list.push(word.substring(0, word.length - 2) + '.' + domain);
+      if (word.substr(-domain.length) === domain) {
+        list.push(word.substring(0, word.length - domain.length) + '.'
+          + domain);
       }
     });
     return list;
