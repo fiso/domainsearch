@@ -1,5 +1,6 @@
 const commandLineArgs = require('command-line-args');
 const fs = require('fs');
+const dns = require('dns');
 
 const tlds = `
 AAA
@@ -1550,6 +1551,7 @@ ZW`;
 const optionDefinitions = [
   { name: 'dictionary', alias: 'd', type: String, defaultOption: true },
   { name: 'domains', alias: 'D', type: String },
+  { name: 'verify', alias: 'V', type: Boolean, defaultValue: false },
 ];
 
 let options = {};
@@ -1578,7 +1580,7 @@ if (!options.domains) {
       return Boolean(domain);
     });
 }
-  
+
 const dictionary = String(fs.readFileSync(options.dictionary))
   .split('\n')
   .slice(1)
@@ -1603,5 +1605,16 @@ const candidates = dictionary
     });
     return list;
   }, []);
-  
-console.log(candidates.join('\n'));
+
+if (options.verify) {
+  candidates.map((candidate) => {
+    dns
+      .resolve4(candidate, (result) => {
+        if (result && result.errno === dns.NOTFOUND) {
+          console.log(candidate);
+        }
+      });
+  });
+} else {
+  console.log(candidates.join('\n'));
+}
