@@ -1,0 +1,12 @@
+{
+  "name": "domainsearch",
+  "version": "0.1.0",
+  "description": "A tool to search for domain names",
+  "repository": "shut up, npm",
+  "main": "domainsearch.js",
+  "author": "Filip Haglund",
+  "license": "ISC",
+  "dependencies": {
+    "command-line-args": "^4.0.7"
+  }
+}
