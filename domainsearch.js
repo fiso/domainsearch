@@ -49,7 +49,7 @@ const dictionary = String(fs.readFileSync(options.dictionary))
     }
     
     return word.substring(0, slashPos);
-  });
+  }).filter((word) => word.length > 0);
 
 const candidates = dictionary
   .reduce((list, word) => {
