@@ -18,7 +18,16 @@ const options = select(null, () => {
   try {
     return commandLineArgs(optionDefinitions);
   } catch (e) {
-    return {};
+    if (e.message) {
+      console.error(e.message);
+    }
+
+    return optionDefinitions.reduce((options, entry) => {
+      if (entry.defaultValue) {
+        options[entry.name] = entry.defaultValue;
+      }
+      return options;
+    }, {});
   }
 });
 
