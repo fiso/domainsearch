@@ -7,6 +7,7 @@
   "author": "Filip Haglund",
   "license": "ISC",
   "dependencies": {
-    "command-line-args": "^4.0.7"
+    "command-line-args": "^4.0.7",
+    "node-select": "^0.1.2"
   }
 }
