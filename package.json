@@ -1,6 +1,6 @@
 {
   "name": "domainsearch",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A tool to search for domain names",
   "repository": "shut up, npm",
   "main": "domainsearch.js",
