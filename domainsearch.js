@@ -67,7 +67,8 @@ const candidates = dictionary
       if (options['include-nonsplit']) {
         list.push(`${word}.${domain}`);
       }
-      if (word.substr(-domain.length) === domain) {
+      if (word.substr(-domain.length) === domain &&
+        word.length > domain.length) {
         list.push(word.substring(0, word.length - domain.length) + '.'
           + domain);
       }
@@ -99,7 +100,7 @@ if (options.verify) {
               }
               retry.push(candidate);
             } else {
-              console.error(`${candidate} ${result.errno}`);
+              console.error(`\n${candidate} ${result.errno}`);
             }
           }
           resolve();
