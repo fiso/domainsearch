@@ -31,8 +31,10 @@ if (!options.domains) {
   options.domains = String(fs.readFileSync(options.conservative ?
       'tlds_conservative.txt' : 'tlds.txt'))
     .split('\n')
-    .filter((tld) => !(options['exclude-xn'] && tld.indexOf('XN--') > -1))
-    .map((tld) => tld.toLocaleLowerCase());
+    .filter((domain) => !(options['exclude-xn'] && domain.indexOf('XN--') > -1))
+    .map((domain) => domain.trim().toLocaleLowerCase())
+    .filter((domain) => Boolean(domain))
+    .map((domain) => domain.toLocaleLowerCase());
 } else {
   options.domains = options.domains
     .split(',')
@@ -79,7 +81,8 @@ const candidates = dictionary
 if (options.verify) {
   const verified = [];
 
-  console.warn(`> Verifying ${candidates.length} candidates…`);
+  console.warn(`> Verifying ${candidates.length} ${pluralize(candidates.length, 'candidate', 'candidates')}…`);
+  let lastRetry = -1;
 
   function verify (candidates) {
     const retry = [];
@@ -115,8 +118,18 @@ if (options.verify) {
         }
 
         if (retry.length > 0) {
-          console.warn(`> ${retry.length} requests timed out, retrying…`);
-          verify(retry);
+          if (lastRetry !== -1 && retry.length === lastRetry) {
+            console.error(`> Retrying appears to be stuck. Terminating.`);
+            console.error('> The following domains failed permanently:');
+            console.error(retry);
+            if (options.sort) {
+              printOutput(verified);
+            }
+          } else {
+            console.warn(`> ${retry.length} ${pluralize(retry.length, 'request', 'requests')} timed out, retrying…`);
+            lastRetry = retry.length;
+            verify(retry);
+          }
         } else if (options.sort) {
           printOutput(verified);
         }
@@ -126,6 +139,10 @@ if (options.verify) {
   verify(candidates);
 } else {
   printOutput(candidates);
+}
+
+function pluralize (value, singular, plural) {
+  return Number(value) > 1 ? plural : singular;
 }
 
 function printOutput (result) {
