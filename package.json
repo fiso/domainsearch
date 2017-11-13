@@ -2,8 +2,12 @@
   "name": "domainsearch",
   "version": "0.3.1",
   "description": "A tool to search for domain names",
-  "repository": "shut up, npm",
+  "repository": "https://github.com/fiso/domainsearch",
   "main": "domainsearch.js",
+  "preferGlobal": true,
+  "bin": {
+    "domainsearch": "./domainsearch.js"
+  },
   "author": "Filip Haglund",
   "license": "ISC",
   "dependencies": {

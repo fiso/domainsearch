@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const commandLineArgs = require('command-line-args');
 const fs = require('fs');
 const dns = require('dns');
