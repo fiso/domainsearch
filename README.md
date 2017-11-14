@@ -25,16 +25,16 @@ One of either dictionary or word must be given.
 - `--domains, -D` — Specify a comma-separated list of top-level domains to search (for example 'ga, it, net')
 - `--verify, -V` — Check if the domains are available for registration
 - `--sort, -s` — Alphabetically sort the output
-- `--conservative, -c` — Only scan top level domains that are known to be possible to register
+- `--alldomains, -a` — Include all existing top-level domains, and not only ones that are known to be available for registration
 - `--include-nonsplit, -i` — For the word "delicious", look for available top domains like "delicious.com", and not just clever constructs like "delicio.us"
 - `--exclude-xn, -x` — Exclude domains that start with XN--
 
 ### Examples
 To search all existing top-level domains for Swedish words, without verification:
-`domainsearch dictionaries/swedish.dic`
+`domainsearch dictionaries/swedish.dic --alldomains`
 
 To search all existing top-level domains for Swedish words, with verification:
-`domainsearch dictionaries/swedish.dic --verify`
+`domainsearch dictionaries/swedish.dic --verify --alldomains`
 
 To search only a few top-level domains for Swedish words, without verification:
 `domainsearch dictionaries/swedish.dic --domains 'ga, se, zippo'`
@@ -42,6 +42,6 @@ To search only a few top-level domains for Swedish words, without verification:
 To search the entire english dictionary for available [word.domain] domains,
 excluding domains that start with XN--, verify availability, only look at top level
 domains that are possible to register, sort the output and store it in `us.txt`:
-`domainsearch dictionaries/usenglish.dic --verify --exclude-xn --sort --conservative > us.txt`
+`domainsearch dictionaries/usenglish.dic --verify --exclude-xn --sort > us.txt`
 
-Be aware this takes roughly 40 minutes to complete in my testing.
+Be aware a big search like this takes something like 40 minutes to complete.

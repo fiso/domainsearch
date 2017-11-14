@@ -7,14 +7,16 @@ const select = require('node-select').select;
 const path = require('path');
 
 const optionDefinitions = [
-  { name: 'dictionary', alias: 'd', type: String, defaultOption: true },
-  { name: 'word', alias: 'w', type: String, defaultValue: '' },
-  { name: 'domains', alias: 'D', type: String },
-  { name: 'conservative', alias: 'c', type: Boolean, defaultValue: true },
-  { name: 'verify', alias: 'V', type: Boolean, defaultValue: false },
-  { name: 'sort', alias: 's', type: Boolean, defaultValue: false },
-  { name: 'include-nonsplit', alias: 'i', type: Boolean, defaultValue: false },
-  { name: 'exclude-xn', alias: 'x', type: Boolean, defaultValue: false },
+  { name: 'dictionary', alias: 'd', type: String, defaultOption: true, description: 'filename of dictionary file' },
+  { name: 'word', alias: 'w', type: String, defaultValue: '', description: 'single word to use, instead of dictionary' },
+  { name: 'domains', alias: 'D', type: String, description: 'comma-separated list of specific top-level domains to search (leave blank to use default list)' },
+  { name: 'alldomains', alias: 'a', type: Boolean, defaultValue: false, description: 'include all existing top-level domains, and not only ones that are known to be available for registration' },
+  { name: 'verify', alias: 'V', type: Boolean, defaultValue: false, description: 'verify domain availability via dns lookup' },
+  { name: 'sort', alias: 's', type: Boolean, defaultValue: false, description: 'sort output alphabetically' },
+  { name: 'include-nonsplit', alias: 'i', type: Boolean, defaultValue: false, description: 'for a word like "delicious", look for available top domains like "delicious.com", and not just clever constructs like "delicio.us"' },
+  { name: 'exclude-xn', alias: 'x', type: Boolean, defaultValue: false, description: 'exclude domains that start with XN--' },
+  { name: 'help', alias: 'h', type: Boolean, defaultValue: false, description: 'show this help text' },
+  { name: 'version', alias: 'v', type: Boolean, defaultValue: false, description: 'print version number' },
 ];
 
 const options = select(null, () => {
@@ -26,7 +28,7 @@ const options = select(null, () => {
     }
 
     return optionDefinitions.reduce((options, entry) => {
-      if (entry.defaultValue) {
+      if (typeof entry.defaultValue !== 'undefined') {
         options[entry.name] = entry.defaultValue;
       }
       return options;
@@ -34,9 +36,34 @@ const options = select(null, () => {
   }
 });
 
+function usage () {
+  console.log('Usage: domainsearch [dictionaryfile] [options]');
+  console.log('       OR');
+  console.log('       domainsearch -w [word] [options]');
+  console.log('');
+  console.log('Options:');
+  function rightPad (str, len, pad) {
+    let newStr = str;
+    while (newStr.length < len) {
+      newStr += pad;
+    }
+    return newStr;
+  }
+
+  optionDefinitions.forEach((option) => {
+    console.log(`  ${rightPad(`-${option.alias}, --${option.name}`, 26, ' ')} ${option.description}`);
+  });
+}
+
+if (options.help) {
+  usage();
+  process.exit();
+}
+
 if (!options.dictionary && !options.word) {
   console.error("Missing required parameters — one of 'dictionary' or 'word'");
-  process.exit();
+  usage();
+  process.exit(1);
 }
 
 if (!options.domains) {
@@ -57,7 +84,19 @@ if (!options.domains) {
 
 const dictionary = select(null, () => {
     if (options.dictionary) {
-      return String(fs.readFileSync(options.dictionary))
+      let file = '';
+      try {
+        file = String(fs.readFileSync(options.dictionary));
+      } catch (e) {
+        try {
+          file = String(fs.readFileSync(`${__dirname}${path.sep}${options.dictionary}`));
+        } catch (e) {
+          console.error(`Error accessing file ${options.dictionary}`);
+          process.exit(1);
+        }
+      }
+
+      return file
         .split('\n')
         .slice(1);
     } else if (options.word) {
