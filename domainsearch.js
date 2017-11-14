@@ -55,6 +55,11 @@ function usage () {
   });
 }
 
+if (options.version) {
+  console.log(require('./package.json').version);
+  process.exit();
+}
+
 if (options.help) {
   usage();
   process.exit();
