@@ -4,6 +4,7 @@ const commandLineArgs = require('command-line-args');
 const fs = require('fs');
 const dns = require('dns');
 const select = require('node-select').select;
+const path = require('path');
 
 const optionDefinitions = [
   { name: 'dictionary', alias: 'd', type: String, defaultOption: true },
@@ -40,7 +41,8 @@ if (!options.dictionary && !options.word) {
 
 if (!options.domains) {
   options.domains = String(fs.readFileSync(options.conservative ?
-      'tlds_conservative.txt' : 'tlds.txt'))
+      `${__dirname}${path.sep}tlds_conservative.txt` :
+      `${__dirname}${path.sep}tlds.txt`))
     .split('\n')
     .filter((domain) => !(options['exclude-xn'] && domain.indexOf('XN--') > -1))
     .map((domain) => domain.trim().toLocaleLowerCase())

@@ -10,8 +10,11 @@ Optionally, you can also have the tool check for dns availability, using the
 queried, or if the same list of domains keep giving timeouts, whichever comes
 first.
 
+## Installation
+`npm install -g domainsearch`
+
 ## Basic usage
-`node domainsearch.js dictionaryfile`
+`domainsearch dictionaryfile` or `domainsearch --word myword`
 
 ## Parameters
 
@@ -28,17 +31,17 @@ One of either dictionary or word must be given.
 
 ### Examples
 To search all existing top-level domains for Swedish words, without verification:
-`node domainsearch.js dictionaries/swedish.dic`
+`domainsearch dictionaries/swedish.dic`
 
 To search all existing top-level domains for Swedish words, with verification:
-`node domainsearch.js dictionaries/swedish.dic --verify`
+`domainsearch dictionaries/swedish.dic --verify`
 
 To search only a few top-level domains for Swedish words, without verification:
-`node domainsearch.js dictionaries/swedish.dic --domains 'ga, se, zippo'`
+`domainsearch dictionaries/swedish.dic --domains 'ga, se, zippo'`
 
 To search the entire english dictionary for available [word.domain] domains,
 excluding domains that start with XN--, verify availability, only look at top level
 domains that are possible to register, sort the output and store it in `us.txt`:
-`node domainsearch.js dictionaries/usenglish.dic --verify --exclude-xn --sort --conservative > us.txt`
+`domainsearch dictionaries/usenglish.dic --verify --exclude-xn --sort --conservative > us.txt`
 
 Be aware this takes roughly 40 minutes to complete in my testing.
