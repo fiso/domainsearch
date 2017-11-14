@@ -1,6 +1,6 @@
 {
   "name": "domainsearch",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "A tool to search for domain names",
   "repository": "https://github.com/fiso/domainsearch",
   "main": "domainsearch.js",
