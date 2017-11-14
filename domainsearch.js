@@ -72,9 +72,9 @@ if (!options.dictionary && !options.word) {
 }
 
 if (!options.domains) {
-  options.domains = String(fs.readFileSync(options.conservative ?
-      `${__dirname}${path.sep}tlds_conservative.txt` :
-      `${__dirname}${path.sep}tlds.txt`))
+  options.domains = String(fs.readFileSync(options.alldomains ?
+      `${__dirname}${path.sep}tlds.txt` :
+      `${__dirname}${path.sep}tlds_conservative.txt`))
     .split('\n')
     .filter((domain) => !(options['exclude-xn'] && domain.indexOf('XN--') > -1))
     .map((domain) => domain.trim().toLocaleLowerCase())
